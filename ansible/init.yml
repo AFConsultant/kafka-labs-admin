@@ -1,0 +1,45 @@
+---
+- name: Init Kafka environment
+  hosts: localhost
+  become: no
+
+  tasks:
+    - name: Add Kafka services to /etc/hosts
+      ansible.builtin.blockinfile:
+        path: /etc/hosts
+        backup: yes
+        block: |
+          127.0.0.1 kafka
+          127.0.0.1 zookeeper
+          127.0.0.1 ksqldb
+          127.0.0.1 schema-registry
+          127.0.0.1 connect
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Kafka Services"
+        unsafe_writes: true
+      become: yes
+
+    - name: Add Kafka CLI convenience functions to .bashrc
+      ansible.builtin.blockinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Kafka CLI Functions"
+        block: |
+          kafka-topics() {
+            docker exec -it kafka /opt/kafka/bin/kafka-topics.sh "$@"
+          }
+
+          kafka-console-producer() {
+            docker exec -it kafka /opt/kafka/bin/kafka-console-producer.sh "$@"
+          }
+
+          kafka-console-consumer() {
+            docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh "$@"
+          }
+
+          kafka-consumer-groups() {
+            docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh "$@"
+          }
+
+          ksql() {
+            docker exec -it ksqldb ksql "$@"
+          }

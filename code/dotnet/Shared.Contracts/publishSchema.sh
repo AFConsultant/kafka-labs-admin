@@ -1,0 +1,2 @@
+PAYLOAD=$(jq -n --arg schema "$(cat AvroSchemas/CitiBikeTrip.avsc)" '{schema: $schema}')
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "$PAYLOAD" http://schema-registry:8081/subjects/bike_trips-value/versions

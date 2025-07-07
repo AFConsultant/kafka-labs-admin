@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "apache.avro.tools": {
+      "version": "1.12.0",
+      "commands": [
+        "avrogen"
+      ],
+      "rollForward": false
+    }
+  }
+}

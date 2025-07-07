@@ -1,0 +1,22 @@
+{
+  "type": "record",
+  "name": "CitiBikeTrip",
+  "namespace": "com.citibike",
+  "fields": [
+    { "name": "TripDuration", "type": "int" },
+    { "name": "StartTime", "type": { "type": "long", "logicalType": "timestamp-millis" } },
+    { "name": "StopTime", "type": { "type": "long", "logicalType": "timestamp-millis" } },
+    { "name": "StartStationId", "type": "int" },
+    { "name": "StartStationName", "type": ["null", "string"], "default": null },
+    { "name": "StartStationLatitude", "type": "double" },
+    { "name": "StartStationLongitude", "type": "double" },
+    { "name": "EndStationId", "type": ["null", "int"], "default": null },
+    { "name": "EndStationName", "type": ["null", "string"], "default": null },
+    { "name": "EndStationLatitude", "type": ["null", "double"], "default": null },
+    { "name": "EndStationLongitude", "type": ["null", "double"], "default": null },
+    { "name": "BikeId", "type": "int" },
+    { "name": "UserType", "type": ["null", "string"], "default": null },
+    { "name": "BirthYear", "type": ["null", "string"], "default": null },
+    { "name": "Gender", "type": "int" }
+  ]
+}
