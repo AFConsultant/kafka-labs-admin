@@ -11,7 +11,7 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
-      - ./kafka-901/security/data/kafka-901-creds:/opt/kafka/security:ro
+      - ./security/data/kafka-901-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-901 9093
       interval: 2s
@@ -31,7 +31,7 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
-      - ./kafka-902/security/data/kafka-902-creds:/opt/kafka/security:ro
+      - ./security/data/kafka-902-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-902 9093
       interval: 2s
@@ -51,7 +51,7 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
-      - ./kafka-903/security/data/kafka-903-creds:/opt/kafka/security:ro
+      - ./security/data/kafka-903-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-903 9093
       interval: 2s
@@ -77,6 +77,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./security/data/kafka-101-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-101 9092
       interval: 2s
@@ -109,6 +111,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./security/data/kafka-102-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-102 9092
       interval: 2s
@@ -141,6 +145,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./security/data/kafka-103-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-103 9092
       interval: 2s
