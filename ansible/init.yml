@@ -9,9 +9,9 @@
         path: /etc/hosts
         backup: yes
         block: |
-          127.0.0.1 kafka
-          127.0.0.1 zookeeper
-          127.0.0.1 ksqldb
+          127.0.0.1 kafka-101
+          127.0.0.1 kafka-102
+          127.0.0.1 kafka-103
           127.0.0.1 schema-registry
           127.0.0.1 connect
         marker: "# {mark} ANSIBLE MANAGED BLOCK - Kafka Services"
@@ -38,8 +38,4 @@
 
           kafka-consumer-groups() {
             docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh "$@"
-          }
-
-          ksql() {
-            docker exec -it ksqldb ksql "$@"
           }

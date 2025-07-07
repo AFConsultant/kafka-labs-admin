@@ -1,25 +1,74 @@
 services:
-  kafka:
+  kafka-101:
     image: apache/kafka:${KAFKA_VERSION}
-    container_name: kafka
+    container_name: kafka-101
     ports:
-      - "9092:9092"
-      - "9093:9093"
+      - "9192:9092"
+      - "9193:9093"
     environment:
       KAFKA_NODE_ID: 101
       KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://kafka-101:9092,CONTROLLER://kafka-101:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-101:9092
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 101@kafka:9093
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 101@kafka-101:9093,102@kafka-102:9093,103@kafka-103:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     healthcheck:
-      test: nc -z kafka 9092
+      test: nc -z kafka-101 9092
+      interval: 2s
+      timeout: 2s
+      retries: 3
+      start_period: 2s
+
+  kafka-102:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: kafka-102
+    ports:
+      - "9292:9092"
+      - "9293:9093"
+    environment:
+      KAFKA_NODE_ID: 102
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-102:9092,CONTROLLER://kafka-102:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-102:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 101@kafka-101:9093,102@kafka-102:9093,103@kafka-103:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+    healthcheck:
+      test: nc -z kafka-102 9092
+      interval: 2s
+      timeout: 2s
+      retries: 3
+      start_period: 2s
+
+  kafka-103:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: kafka-103
+    ports:
+      - "9392:9092"
+      - "9393:9093"
+    environment:
+      KAFKA_NODE_ID: 103
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-103:9092,CONTROLLER://kafka-103:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-103:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 101@kafka-101:9093,102@kafka-102:9093,103@kafka-103:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+    healthcheck:
+      test: nc -z kafka-103 9092
       interval: 2s
       timeout: 2s
       retries: 3
@@ -34,103 +83,14 @@ services:
           connections:
             docker-kafka-server:
               properties:
-                bootstrap.servers: "kafka:9092"
+                bootstrap.servers: "kafka-101:9092,kafka-102:9092,kafka-103:9092"
               schema-registry:
                 url: "http://schema-registry:8081"
               connect:
                 - name: connect
                   url: "http://connect:8083"
-              ksqldb:
-                - name: ksqldb
-                  url: "http://ksqldb:8088"
     ports:
       - 8085:8080
     depends_on:
-      kafka:
+      kafka-101:
         condition: service_healthy
-
-  create-topics:
-    image: apache/kafka:${KAFKA_VERSION}
-    container_name: create-topics
-    command: >
-      bash -c 'echo Creating topics... ;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --topic bike_trips --partitions 3 --replication-factor 1 ;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --topic station_infos_raw_csv --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
-      true'
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  schema-registry:
-    image: confluentinc/cp-schema-registry:7.9.1
-    restart: always
-    container_name: schema-registry
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:9092'
-      KAFKA_REST_CUB_KAFKA_TIMEOUT: 180
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  ksqldb:
-    image: confluentinc/cp-ksqldb-server:7.9.1
-    restart: always
-    container_name: ksqldb
-    ports:
-      - "8088:8088"
-    environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_BOOTSTRAP_SERVERS: "kafka:9092"
-      KSQL_HOST_NAME: ksqldb
-      KSQL_APPLICATION_ID: "ksqldb"
-      KSQL_KSQL_CONNECT_URL: http://connect:8083/
-      KSQL_LISTENERS: "http://0.0.0.0:8088"
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
-      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
-      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  connect:
-    image: confluentinc/cp-kafka-connect:7.9.1
-    restart: always
-    container_name: connect
-    ports:
-      - "8083:8083"
-    environment:
-      CONNECT_REST_PORT: 8083
-      CONNECT_BOOTSTRAP_SERVERS: kafka:9092
-      CONNECT_GROUP_ID: "connect"
-      CONNECT_CONFIG_STORAGE_TOPIC: "connect-config"
-      CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
-      CONNECT_STATUS_STORAGE_TOPIC: "connect-status"
-      CONNECT_REPLICATION_FACTOR: 1
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
-      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components/,/data/connect-jars,/plugins'
-      CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
-    volumes:
-      - ./connect:/plugins:ro
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  postgres:
-    image: postgres:14.18
-    restart: always
-    container_name: postgres
-    shm_size: 128mb
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: postgres

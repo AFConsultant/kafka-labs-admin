@@ -13,6 +13,3 @@
 
 - name: Load station data into Kafka
   ansible.builtin.import_playbook: stations.yml
-
-#- name: Configure ksqlDB resources
-#  ansible.builtin.import_playbook: ksqldb.yml
