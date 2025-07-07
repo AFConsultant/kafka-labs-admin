@@ -4,7 +4,7 @@
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:1": {}
   },
-  "postCreateCommand": "sudo apt update && sudo apt install -y sqlite3 kafkacat ansible",
+  "postCreateCommand": "sudo apt update && sudo apt install -y kafkacat ansible",
   "customizations": {
     "vscode": {
       "extensions": [
