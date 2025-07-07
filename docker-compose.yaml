@@ -1,18 +1,68 @@
 services:
+  kafka-901:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: kafka-901
+    environment:
+      KAFKA_NODE_ID: 901
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://kafka-901:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
+    healthcheck:
+      test: nc -z kafka-901 9093
+      interval: 2s
+      timeout: 2s
+      retries: 3
+      start_period: 2s
+
+  kafka-902:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: kafka-902
+    environment:
+      KAFKA_NODE_ID: 902
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://kafka-902:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
+    healthcheck:
+      test: nc -z kafka-902 9093
+      interval: 2s
+      timeout: 2s
+      retries: 3
+      start_period: 2s
+
+  kafka-903:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: kafka-903
+    environment:
+      KAFKA_NODE_ID: 903
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://kafka-903:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
+    healthcheck:
+      test: nc -z kafka-903 9093
+      interval: 2s
+      timeout: 2s
+      retries: 3
+      start_period: 2s
+
   kafka-101:
     image: apache/kafka:${KAFKA_VERSION}
     container_name: kafka-101
     ports:
       - "9192:9092"
-      - "9193:9093"
     environment:
       KAFKA_NODE_ID: 101
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://kafka-101:9092,CONTROLLER://kafka-101:9093
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: PLAINTEXT://kafka-101:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-101:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 101@kafka-101:9093,102@kafka-102:9093,103@kafka-103:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
@@ -23,21 +73,27 @@ services:
       timeout: 2s
       retries: 3
       start_period: 2s
+    depends_on:
+      kafka-901:
+        condition: service_healthy
+      kafka-902:
+        condition: service_healthy
+      kafka-903:
+        condition: service_healthy
 
   kafka-102:
     image: apache/kafka:${KAFKA_VERSION}
     container_name: kafka-102
     ports:
       - "9292:9092"
-      - "9293:9093"
     environment:
       KAFKA_NODE_ID: 102
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://kafka-102:9092,CONTROLLER://kafka-102:9093
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: PLAINTEXT://kafka-102:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-102:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 101@kafka-101:9093,102@kafka-102:9093,103@kafka-103:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
@@ -48,21 +104,27 @@ services:
       timeout: 2s
       retries: 3
       start_period: 2s
+    depends_on:
+      kafka-901:
+        condition: service_healthy
+      kafka-902:
+        condition: service_healthy
+      kafka-903:
+        condition: service_healthy
 
   kafka-103:
     image: apache/kafka:${KAFKA_VERSION}
     container_name: kafka-103
     ports:
       - "9392:9092"
-      - "9393:9093"
     environment:
       KAFKA_NODE_ID: 103
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://kafka-103:9092,CONTROLLER://kafka-103:9093
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: PLAINTEXT://kafka-103:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-103:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 101@kafka-101:9093,102@kafka-102:9093,103@kafka-103:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
@@ -73,6 +135,13 @@ services:
       timeout: 2s
       retries: 3
       start_period: 2s
+    depends_on:
+      kafka-901:
+        condition: service_healthy
+      kafka-902:
+        condition: service_healthy
+      kafka-903:
+        condition: service_healthy
 
   akhq:
     image: tchiotludo/akhq:${AKHQ_VERSION}
@@ -91,6 +160,7 @@ services:
                   url: "http://connect:8083"
     ports:
       - 8085:8080
+    restart: always
     depends_on:
       kafka-101:
         condition: service_healthy
