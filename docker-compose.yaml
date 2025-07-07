@@ -97,11 +97,10 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://kafka-101:9092,REPLICATION://kafka-101:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-101:9092,REPLICATION://kafka-101:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SASL_SSL,PLAINTEXT:PLAINTEXT
-      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN,SCRAM-SHA-512
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
-      KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
-      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\" user_broker_user=\"broker_secret\";"
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/opt/kafka/config/jaas/broker.conf"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-101.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-101.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
@@ -117,6 +116,7 @@ services:
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
       - ./security/data/kafka-101-creds:/opt/kafka/security:ro
+      - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
     healthcheck:
       test: nc -z kafka-101 9092
       interval: 2s
@@ -142,11 +142,10 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://kafka-102:9092,REPLICATION://kafka-102:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-102:9092,REPLICATION://kafka-102:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SASL_SSL,PLAINTEXT:PLAINTEXT
-      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN,SCRAM-SHA-512
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
-      KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
-      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\" user_broker_user=\"broker_secret\";"
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/opt/kafka/config/jaas/broker.conf"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-102.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-102.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
@@ -162,6 +161,7 @@ services:
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
       - ./security/data/kafka-102-creds:/opt/kafka/security:ro
+      - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
     healthcheck:
       test: nc -z kafka-102 9092
       interval: 2s
@@ -187,11 +187,10 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://kafka-103:9092,REPLICATION://kafka-103:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-103:9092,REPLICATION://kafka-103:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SASL_SSL,PLAINTEXT:PLAINTEXT
-      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN,SCRAM-SHA-512
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
-      KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
-      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\" user_broker_user=\"broker_secret\";"
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/opt/kafka/config/jaas/broker.conf"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-103.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-103.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
@@ -207,6 +206,7 @@ services:
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
       - ./security/data/kafka-103-creds:/opt/kafka/security:ro
+      - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
     healthcheck:
       test: nc -z kafka-103 9092
       interval: 2s
