@@ -10,6 +10,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./kafka-901/security/data/kafka-901-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-901 9093
       interval: 2s
@@ -28,6 +30,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./kafka-902/security/data/kafka-902-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-902 9093
       interval: 2s
@@ -46,6 +50,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./kafka-903/security/data/kafka-903-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-903 9093
       interval: 2s
