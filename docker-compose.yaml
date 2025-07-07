@@ -101,6 +101,7 @@ services:
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
       KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
+      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-101.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-101.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
@@ -145,6 +146,7 @@ services:
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
       KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
+      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-102.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-102.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
@@ -188,6 +190,7 @@ services:
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
       KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
+      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-103.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-103.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
