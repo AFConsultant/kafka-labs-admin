@@ -96,12 +96,12 @@ services:
       KAFKA_PROCESS_ROLES: broker
       KAFKA_LISTENERS: PLAINTEXT://kafka-101:9092,REPLICATION://kafka-101:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-101:9092,REPLICATION://kafka-101:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SSL,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SASL_SSL,PLAINTEXT:PLAINTEXT
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
       KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
-      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
+      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\" user_broker_user=\"broker_secret\";"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-101.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-101.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
@@ -141,12 +141,12 @@ services:
       KAFKA_PROCESS_ROLES: broker
       KAFKA_LISTENERS: PLAINTEXT://kafka-102:9092,REPLICATION://kafka-102:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-102:9092,REPLICATION://kafka-102:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SSL,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SASL_SSL,PLAINTEXT:PLAINTEXT
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
       KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
-      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
+      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\" user_broker_user=\"broker_secret\";"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-102.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-102.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
@@ -190,13 +190,13 @@ services:
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: PLAIN
       KAFKA_LISTENER_NAME_CONTROLLER_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
-      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\";"
+      KAFKA_LISTENER_NAME_REPLICATION_PLAIN_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker_user\" password=\"broker_secret\" user_broker_user=\"broker_secret\";"
       KAFKA_SSL_KEYSTORE_LOCATION: /opt/kafka/security/kafka-103.keystore.jks
       KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/kafka/security/kafka-103.truststore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: kafka-labs
       KAFKA_SSL_KEY_PASSWORD: kafka-labs
       KAFKA_SSL_TRUSTSTORE_PASSWORD: kafka-labs
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SSL,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_SSL,REPLICATION:SASL_SSL,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: REPLICATION
