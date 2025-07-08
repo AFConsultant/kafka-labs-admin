@@ -287,7 +287,10 @@ services:
           connections:
             docker-kafka-server:
               properties:
-                bootstrap.servers: "kafka-101:9092,kafka-102:9092,kafka-103:9092"
+                bootstrap.servers: "kafka-101:9094,kafka-102:9094,kafka-103:9094"
+                security.protocol: "SASL_PLAINTEXT"
+                sasl.mechanism: "SCRAM-SHA-512"
+                sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"akhq\" password=\"akhq-secret\";"
               schema-registry:
                 url: "http://schema-registry:8081"
               connect:
