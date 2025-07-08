@@ -331,6 +331,33 @@ services:
       kafka-101:
         condition: service_healthy
 
+  create-acls:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: create-acls
+    command: >
+      bash -c 'echo Creating ACLs... ;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Describe --cluster --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation DescribeConfigs --cluster --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation AlterConfigs --cluster --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Describe --topic "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation DescribeConfigs --topic "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation AlterConfigs --topic "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Read --topic "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Create --topic "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Write --topic "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Delete --topic "'*'" --command-config /opt/kafka/clients/internal-admin.properties; 
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Describe --group "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Read --group "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation DescribeConfigs --group "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation AlterConfigs --group "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Delete --group "'*'" --command-config /opt/kafka/clients/internal-admin.properties;
+      true'
+    volumes:
+      - ./security/clients/internal-admin.properties:/opt/kafka/clients/internal-admin.properties:ro
+    depends_on:
+      create-users:
+        condition: service_started
+
 volumes:
   data-controller-901:
   data-controller-902:

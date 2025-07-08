@@ -45,3 +45,8 @@
         path: /workspaces/kafka-labs-admin/docker-compose.yaml
         regexp: 'KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND:\s*"?true"?'
         replace: 'KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"'
+    
+    - name: Start services from docker-compose.yaml
+      community.docker.docker_compose:
+        project_src: /workspaces/kafka-labs-admin
+        state: present
