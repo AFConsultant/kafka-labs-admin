@@ -14,5 +14,5 @@
 
     - name: Start services from docker-compose.yaml
       community.docker.docker_compose:
-        project_src: /workspaces/kafka-labs
+        project_src: /workspaces/kafka-labs-admin
         state: present

@@ -25,7 +25,7 @@ The core task is to create a simple application that performs the following step
 ## For Java Developers (using Gradle)
 
 ### Project Setup
-* Navigate to the /workspaces/kafka-labs/solution/java directory.
+* Navigate to the /workspaces/kafka-labs-admin/solution/java directory.
 * Create a new directory for your consumer application (e.g., bike-trip-consumer).
 * Inside that new directory, initialize a new Gradle project using the `gradle init` command. Choose to create a basic "application".
 
@@ -56,7 +56,7 @@ Your consumer needs several key properties to function correctly. The most impor
 ## For .NET Developers
 
 ### Project Setup
-* Navigate to the /workspaces/kafka-labs/solution/dotnet directory.
+* Navigate to the /workspaces/kafka-labs-admin/solution/dotnet directory.
 * Create a new directory for your consumer application (e.g., BikeTripConsumer).
 * Inside that new directory, initialize a new .NET console application using the dotnet new console command.
 

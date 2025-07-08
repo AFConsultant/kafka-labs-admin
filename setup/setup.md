@@ -10,7 +10,7 @@ You can run the lab...
 
 ### Prerequisites
 
-* Go to the project on GitHub : https://github.com/AFConsultant/kafka-labs
+* Go to the project on GitHub : https://github.com/AFConsultant/kafka-labs-admin
 * Click on Code > Codespaces
 * Create a new Codespace by clicking on the three dots and selecting `4-core` as Maching Type.
 * You should have 30 free hours per month.
@@ -29,7 +29,7 @@ kafka-topics
 ```
 This should show the kafka-topics documentation:
 ```txt
-➜ /workspaces/kafka-labs (main) $ kafka-topics
+➜ /workspaces/kafka-labs-admin (main) $ kafka-topics
 Create, delete, describe, or change a topic.
 Option                                   Description                            
 ------                                   -----------                            
@@ -54,7 +54,7 @@ Option                                   Description
 ### Clone the project
 
 ```sh
-git clone git@github.com:AFConsultant/kafka-labs.git
+git clone git@github.com:AFConsultant/kafka-labs-admin.git
 ```
 
 ### Configuration

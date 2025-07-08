@@ -19,7 +19,7 @@ Before you begin, please ensure you have the following:
 The core task is to create a simple application that performs the following steps:
 
 * Connects to our local Kafka cluster.
-* Opens the /workspaces/kafka-labs/data/201306-citibike-tripdata_1_6K.csv file.
+* Opens the /workspaces/kafka-labs-admin/data/201306-citibike-tripdata_1_6K.csv file.
 * Reads the file line by line, skipping the first line (which is the header row).
 * Sends each line of data as a string to the bike_trips_raw_csv topic.
 * Wait 1 second between each message.
@@ -28,7 +28,7 @@ The core task is to create a simple application that performs the following step
 ## For Java Developers (using Gradle)
 
 ### Project Setup
-* Navigate to the /workspaces/kafka-labs/solution/java directory.
+* Navigate to the /workspaces/kafka-labs-admin/solution/java directory.
 * Create a new directory for your producer application (e.g., bike-trip-producer).
 * Inside that new directory, initialize a new Gradle project. The `gradle init` command will be your starting point. Choose to create a basic "application".
 
@@ -58,7 +58,7 @@ The core task is to create a simple application that performs the following step
 
 ### Project Setup
 
-* Navigate to the /workspaces/kafka-labs/solution/dotnet directory.
+* Navigate to the /workspaces/kafka-labs-admin/solution/dotnet directory.
 * Create a new directory for your producer application (e.g., BikeTripProducer).
 * Inside that new directory, initialize a new .NET console application using the dotnet new console command.
 

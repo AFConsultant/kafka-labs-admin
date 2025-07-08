@@ -8,7 +8,7 @@
       community.docker.docker_image:
         name: producer-api
         build:
-          path: /workspaces/kafka-labs/code/dotnet
+          path: /workspaces/kafka-labs-admin/code/dotnet
           dockerfile: ProducerApi.Dockerfile
         source: build
 
@@ -26,7 +26,7 @@
           SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
           KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
         volumes:
-          - /workspaces/kafka-labs/data:/data
+          - /workspaces/kafka-labs-admin/data:/data
         networks:
           - name: kafka-labs_default
 

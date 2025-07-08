@@ -42,7 +42,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-var filePath = Environment.GetEnvironmentVariable("CSV_FILE_PATH") ?? "/workspaces/kafka-labs/data/201306-citibike-tripdata_1_6K.csv";
+var filePath = Environment.GetEnvironmentVariable("CSV_FILE_PATH") ?? "/workspaces/kafka-labs-admin/data/201306-citibike-tripdata_1_6K.csv";
 const string topicName = "bike_trips";
 
 app.MapPost("/trip", ([FromServices] IProducer<Null, CitiBikeTrip> producer) =>

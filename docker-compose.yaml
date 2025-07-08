@@ -1,4 +1,22 @@
 services:
+  volume-init:
+    image: busybox
+    command: |
+      chown -R 1000:1000 /opt/kafka/data901 && \
+      chown -R 1000:1000 /opt/kafka/data902 && \
+      chown -R 1000:1000 /opt/kafka/data903 && \
+      chown -R 1000:1000 /opt/kafka/data101 && \
+      chown -R 1000:1000 /opt/kafka/data102 && \
+      chown -R 1000:1000 /opt/kafka/data103
+    volumes:
+      - data-controller-901:/opt/kafka/data901
+      - data-controller-902:/opt/kafka/data902
+      - data-controller-903:/opt/kafka/data903
+      - data-broker-101:/opt/kafka/data101
+      - data-broker-102:/opt/kafka/data102
+      - data-broker-103:/opt/kafka/data103
+    restart: "no"
+    
   kafka-901:
     image: apache/kafka:${KAFKA_VERSION}
     container_name: kafka-901
@@ -18,15 +36,21 @@ services:
       KAFKA_SSL_KEY_PASSWORD: kafka-labs
       KAFKA_SSL_TRUSTSTORE_PASSWORD: kafka-labs
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_SUPER_USERS: User:controller_user;User:broker_user;User:admin
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
+      - data-controller-901:/opt/kafka/data
       - ./security/data/kafka-901-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-901 9093
       interval: 2s
-      timeout: 2s
-      retries: 3
-      start_period: 2s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
+    depends_on:
+      - volume-init
 
   kafka-902:
     image: apache/kafka:${KAFKA_VERSION}
@@ -47,15 +71,21 @@ services:
       KAFKA_SSL_KEY_PASSWORD: kafka-labs
       KAFKA_SSL_TRUSTSTORE_PASSWORD: kafka-labs
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_SUPER_USERS: User:controller_user;User:broker_user;User:admin
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
+      - data-controller-902:/opt/kafka/data
       - ./security/data/kafka-902-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-902 9093
       interval: 2s
-      timeout: 2s
-      retries: 3
-      start_period: 2s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
+    depends_on:
+      - volume-init
 
   kafka-903:
     image: apache/kafka:${KAFKA_VERSION}
@@ -76,15 +106,21 @@ services:
       KAFKA_SSL_KEY_PASSWORD: kafka-labs
       KAFKA_SSL_TRUSTSTORE_PASSWORD: kafka-labs
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_SUPER_USERS: User:controller_user;User:broker_user;User:admin
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
+      - data-controller-903:/opt/kafka/data
       - ./security/data/kafka-903-creds:/opt/kafka/security:ro
     healthcheck:
       test: nc -z kafka-903 9093
       interval: 2s
-      timeout: 2s
-      retries: 3
-      start_period: 2s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
+    depends_on:
+      - volume-init
 
   kafka-101:
     image: apache/kafka:${KAFKA_VERSION}
@@ -109,20 +145,25 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: REPLICATION
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_SUPER_USERS: User:controller_user;User:broker_user;User:admin
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
+      - data-broker-101:/opt/kafka/data
       - ./security/data/kafka-101-creds:/opt/kafka/security:ro
+      - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
     healthcheck:
       test: nc -z kafka-101 9092
       interval: 2s
-      timeout: 2s
-      retries: 3
-      start_period: 2s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
     depends_on:
       kafka-901:
         condition: service_healthy
@@ -130,6 +171,8 @@ services:
         condition: service_healthy
       kafka-903:
         condition: service_healthy
+      volume-init:
+        condition: service_started
 
   kafka-102:
     image: apache/kafka:${KAFKA_VERSION}
@@ -154,20 +197,25 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: REPLICATION
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_SUPER_USERS: User:controller_user;User:broker_user;User:admin
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
+      - data-broker-102:/opt/kafka/data
       - ./security/data/kafka-102-creds:/opt/kafka/security:ro
+      - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
     healthcheck:
       test: nc -z kafka-102 9092
       interval: 2s
-      timeout: 2s
-      retries: 3
-      start_period: 2s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
     depends_on:
       kafka-901:
         condition: service_healthy
@@ -175,6 +223,8 @@ services:
         condition: service_healthy
       kafka-903:
         condition: service_healthy
+      volume-init:
+        condition: service_started
 
   kafka-103:
     image: apache/kafka:${KAFKA_VERSION}
@@ -199,20 +249,25 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 901@kafka-901:9093,902@kafka-902:9093,903@kafka-903:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: REPLICATION
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_SUPER_USERS: User:controller_user;User:broker_user;User:admin
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
     volumes:
+      - data-broker-103:/opt/kafka/data
       - ./security/data/kafka-103-creds:/opt/kafka/security:ro
+      - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
     healthcheck:
       test: nc -z kafka-103 9092
       interval: 2s
-      timeout: 2s
-      retries: 3
-      start_period: 2s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
     depends_on:
       kafka-901:
         condition: service_healthy
@@ -220,6 +275,8 @@ services:
         condition: service_healthy
       kafka-903:
         condition: service_healthy
+      volume-init:
+        condition: service_started
 
   akhq:
     image: tchiotludo/akhq:${AKHQ_VERSION}
@@ -242,3 +299,39 @@ services:
     depends_on:
       kafka-101:
         condition: service_healthy
+      create-users:
+        condition: service_started
+
+  create-users:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: create-users
+    command: >
+      bash -c 'echo Creating users... ;
+      /opt/kafka/bin/kafka-configs.sh --bootstrap-server kafka-101:9092 --alter --add-config 'SCRAM-SHA-512=[iterations=8192,password=admin-secret]' --entity-type users --entity-name admin ;
+      /opt/kafka/bin/kafka-configs.sh --bootstrap-server kafka-101:9092 --alter --add-config 'SCRAM-SHA-512=[iterations=8192,password=akhq-secret]' --entity-type users --entity-name akhq ;
+      /opt/kafka/bin/kafka-configs.sh --bootstrap-server kafka-101:9092 --alter --add-config 'SCRAM-SHA-512=[iterations=8192,password=bob-secret]' --entity-type users --entity-name bob ;
+      /opt/kafka/bin/kafka-configs.sh --bootstrap-server kafka-101:9092 --alter --add-config 'SCRAM-SHA-512=[iterations=8192,password=alice-secret]' --entity-type users --entity-name alice ;
+      true'
+    depends_on:
+      kafka-101:
+        condition: service_healthy
+
+  create-topics:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: create-topics
+    command: >
+      bash -c 'echo Creating topics... ;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic bike_trips --partitions 3 --replication-factor 1 ;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic station_infos_raw_csv --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
+      true'
+    depends_on:
+      kafka-101:
+        condition: service_healthy
+
+volumes:
+  data-controller-901:
+  data-controller-902:
+  data-controller-903:
+  data-broker-101:
+  data-broker-102:
+  data-broker-103:

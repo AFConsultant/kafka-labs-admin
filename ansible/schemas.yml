@@ -7,7 +7,7 @@
     - name: Execute the publishSchema.sh script
       ansible.builtin.shell:
         cmd: ./publishSchema.sh
-        chdir: /workspaces/kafka-labs/code/dotnet/Shared.Contracts
+        chdir: /workspaces/kafka-labs-admin/code/dotnet/Shared.Contracts
       args:
         executable: /bin/bash
       register: registry_result

@@ -15,7 +15,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-const string filePath = "/workspaces/kafka-labs/data/201306-citibike-tripdata_1_6K.csv";
+const string filePath = "/workspaces/kafka-labs-admin/data/201306-citibike-tripdata_1_6K.csv";
 const string topicName = "bike_trips_raw_csv";
 
 app.MapPost("/trip", ([FromServices] IProducer<Null, string> producer) => {

@@ -7,7 +7,7 @@
     - name: Produce station info to Kafka topic from CSV
       ansible.builtin.shell:
         cmd: |
-          tail -n +2 /workspaces/kafka-labs/data/stations.csv | \
+          tail -n +2 /workspaces/kafka-labs-admin/data/stations.csv | \
           awk -F',' '{print $1 "\t" $0}' | \
           kcat -b kafka:9092 -t station_infos_raw_csv -P -K '\t' -X partitioner=murmur2_random
       args:
