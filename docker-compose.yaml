@@ -7,7 +7,8 @@ services:
       chown -R 1000:1000 /opt/kafka/data903 && \
       chown -R 1000:1000 /opt/kafka/data101 && \
       chown -R 1000:1000 /opt/kafka/data102 && \
-      chown -R 1000:1000 /opt/kafka/data103
+      chown -R 1000:1000 /opt/kafka/data103 && \
+      chown -R 1000:1000 /opt/kafka/data104
     volumes:
       - data-controller-901:/opt/kafka/data901
       - data-controller-902:/opt/kafka/data902
@@ -15,6 +16,7 @@ services:
       - data-broker-101:/opt/kafka/data101
       - data-broker-102:/opt/kafka/data102
       - data-broker-103:/opt/kafka/data103
+      - data-broker-104:/opt/kafka/data104
     restart: "no"
     
   kafka-901:
@@ -366,3 +368,4 @@ volumes:
   data-broker-101:
   data-broker-102:
   data-broker-103:
+  data-broker-104:

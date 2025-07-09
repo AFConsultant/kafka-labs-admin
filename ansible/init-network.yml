@@ -12,6 +12,7 @@
           127.0.0.1 kafka-101
           127.0.0.1 kafka-102
           127.0.0.1 kafka-103
+          127.0.0.1 kafka-104
           127.0.0.1 schema-registry
           127.0.0.1 connect
         marker: "# {mark} ANSIBLE MANAGED BLOCK - Kafka Services"
