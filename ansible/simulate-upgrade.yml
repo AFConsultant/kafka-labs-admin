@@ -1,0 +1,35 @@
+---
+- name: Create super users
+  hosts: localhost
+
+  tasks:
+    - name: Update apt cache and install Docker dependencies
+      ansible.builtin.apt:
+        name:
+          - docker-compose
+          - python3-docker
+        state: present
+        update_cache: yes
+      become: yes
+
+    - name: Stop services from docker-compose.yaml
+      community.docker.docker_compose:
+        project_src: /workspaces/kafka-labs-admin
+        state: absent
+
+    - name: Change KAFKA_VERSION to 3.9
+      ansible.builtin.replace:
+        path: /workspaces/kafka-labs-admin/docker-compose.yaml
+        regexp: 'apache/kafka:\$\{KAFKA_VERSION\}'
+        replace: 'apache/kafka:3.9.1'
+
+    - name: Change KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND to true in docker-compose.yaml
+      ansible.builtin.replace:
+        path: /workspaces/kafka-labs-admin/docker-compose.yaml
+        regexp: 'KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND:\s*"?false"?'
+        replace: 'KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"'
+
+    - name: Start services from docker-compose.yaml
+      community.docker.docker_compose:
+        project_src: /workspaces/kafka-labs-admin
+        state: present

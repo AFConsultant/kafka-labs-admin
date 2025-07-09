@@ -336,6 +336,7 @@ services:
     container_name: create-acls
     command: >
       bash -c 'echo Creating ACLs... ;
+      sleep 10 ; # wait for users to be created
       /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation Describe --cluster --command-config /opt/kafka/clients/internal-admin.properties;
       /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation DescribeConfigs --cluster --command-config /opt/kafka/clients/internal-admin.properties;
       /opt/kafka/bin/kafka-acls.sh --bootstrap-server kafka-101:9094 --add --allow-principal User:akhq --operation AlterConfigs --cluster --command-config /opt/kafka/clients/internal-admin.properties;

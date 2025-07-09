@@ -1,0 +1,54 @@
+---
+- name: Install and Configure Apache Kafka
+  hosts: localhost
+  become: no
+  vars:
+    kafka_version: "4.0.0"
+    kafka_scala_version: "2.13"
+    kafka_download_url: "https://dlcdn.apache.org/kafka/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+    kafka_install_dir: "/opt/kafka"
+    kafka_user: "vscode"
+
+  tasks:
+    - name: Create Kafka installation directory
+      ansible.builtin.file:
+        path: "{{ kafka_install_dir }}"
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Set ownership of the Kafka directory
+      ansible.builtin.file:
+        path: "{{ kafka_install_dir }}"
+        state: directory
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_user }}"
+        recurse: yes
+      become: yes
+
+    - name: Download and unarchive Kafka
+      ansible.builtin.unarchive:
+        src: "{{ kafka_download_url }}"
+        dest: "{{ kafka_install_dir }}"
+        remote_src: yes
+        creates: "{{ kafka_install_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}"
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_user }}"
+
+    - name: Create a symbolic link to the Kafka installation
+      ansible.builtin.file:
+        src: "{{ kafka_install_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}"
+        dest: "{{ kafka_install_dir }}/kafka"
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_user }}"
+        state: link
+        force: yes
+
+    - name: Add Kafka bin directory to the user's PATH
+      become: no #
+      ansible.builtin.lineinfile:
+        path: "~/.bashrc"
+        line: 'export PATH="{{ kafka_install_dir }}/kafka/bin:$PATH"'
+        regexp: '^export PATH=".*kafka/bin.*"'
+        state: present
+        mode: '0644'
