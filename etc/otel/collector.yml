@@ -1,0 +1,29 @@
+receivers:
+  kafkametrics:
+    brokers: ["kafka-101:9092", "kafka-102:9092", "kafka-103:9092"]
+    
+    scrapers:
+      - brokers
+      - topics
+      - consumers
+    
+    collection_interval: 10s
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    resource_to_telemetry_conversion:
+      enabled: true
+
+
+service:
+  pipelines:
+    metrics:
+      receivers: [kafkametrics]
+      processors: [batch]
+      exporters: [debug, prometheus]

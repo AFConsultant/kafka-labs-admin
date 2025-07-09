@@ -361,6 +361,40 @@ services:
       create-users:
         condition: service_started
 
+  grafana:
+    image: "grafana/grafana:${GRAFANA_VERSION}"
+    ports:
+     - "3000:3000"
+    environment:
+      GF_PATHS_DATA : /var/lib/grafana
+      GF_SECURITY_ADMIN_PASSWORD : kafka
+    volumes:
+     - ./etc/grafana/provisioning:/etc/grafana/provisioning:ro
+     - ./etc/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    container_name: grafana
+    depends_on:
+     - prometheus
+
+  prometheus:
+    image: "prom/prometheus:${PROMETHEUS_VERSION}"
+    ports:
+     - "9090:9090"
+    volumes:
+     - ./etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command: "--config.file=/etc/prometheus/prometheus.yml"
+    container_name: prometheus
+
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector-contrib:${OTEL_COLLECTOR_CONTRIB_VERSION}
+    volumes:
+      - ./etc/otel/collector.yml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - "4317:4317"
+    depends_on:
+      kafka-101:
+        condition: service_healthy
+
 volumes:
   data-controller-901:
   data-controller-902:
