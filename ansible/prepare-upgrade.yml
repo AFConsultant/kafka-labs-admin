@@ -19,15 +19,19 @@
 
     - name: Change KAFKA_VERSION to 3.9
       ansible.builtin.replace:
-        path: /workspaces/kafka-labs-admin/docker-compose.yaml
-        regexp: 'apache/kafka:\$\{KAFKA_VERSION\}'
-        replace: 'apache/kafka:3.9.1'
+        path: /workspaces/kafka-labs-admin/.env
+        regexp: '^KAFKA_{{ item }}_VERSION=.*$'
+        replace: 'KAFKA_{{ item }}_VERSION=3.9.1'
+      loop:
+        - 101
+        - 102
+        - 103
 
-    - name: Change KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND to true in docker-compose.yaml
+    - name: Change KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND to true
       ansible.builtin.replace:
-        path: /workspaces/kafka-labs-admin/docker-compose.yaml
-        regexp: 'KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND:\s*"?false"?'
-        replace: 'KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"'
+        path: /workspaces/kafka-labs-admin/.env
+        regexp: '^KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND=.*$'
+        replace: 'KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND=true'
 
     - name: Start services from docker-compose.yaml
       community.docker.docker_compose:

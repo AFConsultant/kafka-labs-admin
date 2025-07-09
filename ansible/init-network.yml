@@ -1,0 +1,19 @@
+---
+- name: Init Kafka network
+  hosts: localhost
+  become: no
+
+  tasks:
+    - name: Add Kafka services to /etc/hosts
+      ansible.builtin.blockinfile:
+        path: /etc/hosts
+        backup: yes
+        block: |
+          127.0.0.1 kafka-101
+          127.0.0.1 kafka-102
+          127.0.0.1 kafka-103
+          127.0.0.1 schema-registry
+          127.0.0.1 connect
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Kafka Services"
+        unsafe_writes: true
+      become: yes

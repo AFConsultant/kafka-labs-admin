@@ -1,15 +1,18 @@
 ---
-- name: Run initial environment setup
-  ansible.builtin.import_playbook: init.yml
+- name: Run network setup
+  ansible.builtin.import_playbook: init-network.yml
+
+- name: Install kafak binaries
+  ansible.builtin.import_playbook: install-kafka-binaries.yml
 
 - name: Start Docker services
   ansible.builtin.import_playbook: docker.yml
 
-- name: Publish DotNet schemas
-  ansible.builtin.import_playbook: schemas.yml
+# - name: Publish DotNet schemas
+#   ansible.builtin.import_playbook: schemas.yml
 
-- name: Build and run the producer API
-  ansible.builtin.import_playbook: producer.yml
+# - name: Build and run the producer API
+#   ansible.builtin.import_playbook: producer.yml
 
-- name: Load station data into Kafka
-  ansible.builtin.import_playbook: stations.yml
+# - name: Load station data into Kafka
+#   ansible.builtin.import_playbook: stations.yml

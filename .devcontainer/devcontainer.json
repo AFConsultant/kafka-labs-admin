@@ -1,0 +1,20 @@
+{
+  "name": "Kafka Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "21",
+      "installMaven": "false",
+      "installGradle": "false"
+    }
+  },
+  "postCreateCommand": "sudo apt update && sudo apt install -y kafkacat ansible",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-ossdata.vscode-pgsql"
+      ]
+    }
+  }
+}
