@@ -1,5 +1,5 @@
 ---
-- name: Create super users
+- name: Prepare Kafka upgrade
   hosts: localhost
 
   tasks:
@@ -23,6 +23,9 @@
         regexp: '^KAFKA_{{ item }}_VERSION=.*$'
         replace: 'KAFKA_{{ item }}_VERSION=3.9.1'
       loop:
+        - 901
+        - 902
+        - 903
         - 101
         - 102
         - 103

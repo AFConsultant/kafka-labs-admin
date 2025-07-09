@@ -1,0 +1,26 @@
+---
+  - name: Stop kafka-{{ kafka_id }} Docker container
+    community.docker.docker_container:
+      name: kafka-{{ kafka_id }}
+      state: absent
+  
+  - name: Change KAFKA_VERSION to {{ version }} for kafka-{{ kafka_id }}
+    ansible.builtin.replace:
+      path: /workspaces/kafka-labs-admin/.env
+      regexp: '^KAFKA_{{ kafka_id }}_VERSION=.*$'
+      replace: 'KAFKA_{{ kafka_id }}_VERSION={{ version }}'
+
+  - name: Restart kafka-{{ kafka_id }} Docker container using docker-compose
+    community.docker.docker_compose:
+      project_src: /workspaces/kafka-labs-admin
+      services:
+        - kafka-{{ kafka_id }}
+      state: present
+
+  - name: Wait for kafka-{{ kafka_id }} to be ready
+    ansible.builtin.shell: |
+      timeout 300 docker logs kafka-{{ kafka_id }} 2>&1 | grep -m 1 "{{ start_message }}"
+    register: kafka_ready
+    until: kafka_ready.rc == 0
+    retries: 3
+    delay: 5

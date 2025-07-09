@@ -1,28 +1,26 @@
 ---
-- name: Create super users
+- name: Run Kafka upgrade
   hosts: localhost
 
   tasks:
-    - name: Stop kafka-101 Docker container
-      community.docker.docker_container:
-        name: kafka-101
-        state: absent
-    
-    - name: Upgrade the version of kafka-101
-      ansible.builtin.replace:
-        path: /workspaces/kafka-labs-admin/docker-compose.yaml
-        regexp: '(kafka-101:[\s\S]*?image:\s+apache/kafka:)3\.9\.1(?=[\s\S]*?(?:kafka-\d+:|$))'
-        replace: '\g<1>4.0.0'
-        backup: yes
-      register: upgrade_result
-    
-    - name: Change KAFKA_VERSION to 4.0.0 for kafka-101
-      ansible.builtin.replace:
-        path: /workspaces/kafka-labs-admin/.env
-        regexp: '^KAFKA_101_VERSION=.*$'
-        replace: 'KAFKA_101_VERSION=4.0.0'
+    - name: Upgrade Kafka controllers
+      include_tasks: upgrade-single-kafka-broker.yml
+      vars:
+        kafka_id: "{{ item }}"
+        version: "4.0.0"
+        start_message: "Our registration has been persisted to the metadata log"
+      loop:
+        - 901
+        - 902
+        - 903
 
-    # - name: Restart kafka-101 Docker container using docker-compose
-    #   community.docker.docker_compose:
-    #     project_src: /workspaces/kafka-labs-admin
-    #     state: present
+    - name: Upgrade Kafka brokers
+      include_tasks: upgrade-single-kafka-broker.yml
+      vars:
+        kafka_id: "{{ item }}"
+        version: "4.0.0"
+        start_message: "Kafka Server started"
+      loop:
+        - 101
+        - 102
+        - 103
