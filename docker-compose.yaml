@@ -170,7 +170,7 @@ services:
       - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
       - ./etc/jmx:/opt/kafka/config/monitoring:ro
-      -  ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
+      - ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
     healthcheck:
       test: nc -z kafka-101 9092
       interval: 2s
@@ -226,7 +226,7 @@ services:
       - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
       - ./etc/jmx:/opt/kafka/config/monitoring:ro
-      -  ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
+      - ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
     healthcheck:
       test: nc -z kafka-102 9092
       interval: 2s
@@ -282,7 +282,7 @@ services:
       - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
       - ./etc/jmx:/opt/kafka/config/monitoring:ro
-      -  ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
+      - ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
     healthcheck:
       test: nc -z kafka-103 9092
       interval: 2s
