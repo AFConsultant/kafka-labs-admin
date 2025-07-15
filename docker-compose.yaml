@@ -336,8 +336,9 @@ services:
     container_name: create-topics
     command: >
       bash -c 'echo Creating topics... ;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic bike_trips --partitions 3 --replication-factor 1 ;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic station_infos_raw_csv --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic bike_trips --partitions 3 --replication-factor 3 ;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic station_infos_raw_csv --partitions 3 --replication-factor 3 --config cleanup.policy=compact ;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic perf-test --partitions 6 --replication-factor 3 ;
       true'
     depends_on:
       kafka-101:
@@ -395,6 +396,30 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-otlp-receiver"
     container_name: prometheus
+
+  producer-perf-test:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: producer-perf-test
+    command: >
+      bash -c 'echo Launching producer performance test... ;
+      sleep 20 ;
+      /opt/kafka/bin/kafka-producer-perf-test.sh --topic perf-test --num-records 6000000 --record-size 100 --throughput 100 --producer-props bootstrap.servers=kafka-101:9092,kafka-102:9092,kafka-103:9092 client.id=producer-perf;
+      true'
+    depends_on:
+      create-topics:
+        condition: service_started
+
+  consumer-perf-test:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: consumer-perf-test
+    command: >
+      bash -c 'echo Launching consumer performance test... ;
+      sleep 25 ;
+      /opt/kafka/bin/kafka-consumer-perf-test.sh --topic perf-test --messages 6000000 --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --group consumer-perf-test --timeout 100000000;
+      true'
+    depends_on:
+      producer-perf-test:
+        condition: service_started
 
 volumes:
   data-controller-901:
