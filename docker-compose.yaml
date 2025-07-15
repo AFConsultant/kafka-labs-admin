@@ -162,12 +162,15 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://prometheus:9090/api/v1/otlp"
+      KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
     volumes:
       - data-broker-101:/opt/kafka/data
       - ./security/data/kafka-101-creds:/opt/kafka/security:ro
       - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
       - ./etc/jmx:/opt/kafka/config/monitoring:ro
+      -  ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
     healthcheck:
       test: nc -z kafka-101 9092
       interval: 2s
@@ -215,12 +218,15 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
+      OTEL_EXPORTER_OTLP_ENDPOINT: "prometheus:9090"
+      KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
     volumes:
       - data-broker-102:/opt/kafka/data
       - ./security/data/kafka-102-creds:/opt/kafka/security:ro
       - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
       - ./etc/jmx:/opt/kafka/config/monitoring:ro
+      -  ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
     healthcheck:
       test: nc -z kafka-102 9092
       interval: 2s
@@ -268,12 +274,15 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
+      OTEL_EXPORTER_OTLP_ENDPOINT: "prometheus:9090"
+      KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
     volumes:
       - data-broker-103:/opt/kafka/data
       - ./security/data/kafka-103-creds:/opt/kafka/security:ro
       - ./security/clients:/opt/kafka/clients:ro
       - ./security/jaas/broker.conf:/opt/kafka/config/jaas/broker.conf:ro
       - ./etc/jmx:/opt/kafka/config/monitoring:ro
+      -  ./etc/broker/libs/metrics-reporter.jar:/opt/kafka/libs/metrics-reporter.jar:ro
     healthcheck:
       test: nc -z kafka-103 9092
       interval: 2s
