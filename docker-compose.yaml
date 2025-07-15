@@ -353,6 +353,17 @@ services:
       kafka-101:
         condition: service_healthy
 
+  start-metrics-collection:
+    image: apache/kafka:${KAFKA_VERSION}
+    container_name: start-metrics-collection
+    command: >
+      bash -c 'echo Start client metrics collection... ;
+      /opt/kafka/bin/kafka-client-metrics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --alter --name all-metrics --metrics "*" --interval 10000 ;
+      true'
+    depends_on:
+      kafka-101:
+        condition: service_healthy
+
   create-acls:
     image: apache/kafka:${KAFKA_VERSION}
     container_name: create-acls
