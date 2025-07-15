@@ -162,7 +162,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://prometheus:9090/api/v1/otlp"
+      OTEL_EXPORTER_COL_ENDPOINT: "otel-collector:4317"
       KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
     volumes:
       - data-broker-101:/opt/kafka/data
@@ -218,7 +218,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
-      OTEL_EXPORTER_OTLP_ENDPOINT: "prometheus:9090"
+      OTEL_EXPORTER_COL_ENDPOINT: "otel-collector:4317"
       KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
     volumes:
       - data-broker-102:/opt/kafka/data
@@ -274,7 +274,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
-      OTEL_EXPORTER_OTLP_ENDPOINT: "prometheus:9090"
+      OTEL_EXPORTER_COL_ENDPOINT: "otel-collector:4317"
       KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
     volumes:
       - data-broker-103:/opt/kafka/data
@@ -429,6 +429,17 @@ services:
     depends_on:
       producer-perf-test:
         condition: service_started
+
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector-contrib:${OTEL_COLLECTOR_CONTRIB_VERSION}
+    volumes:
+      - ./etc/otel/collector.yml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - "4317:4317"
+    depends_on:
+      kafka-101:
+        condition: service_healthy
 
 volumes:
   data-controller-901:

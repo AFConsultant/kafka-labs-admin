@@ -46,7 +46,7 @@ public class ClientOtlpMetricsReporter implements MetricsReporter, ClientTelemet
   private static final Logger log = LoggerFactory.getLogger(ClientOtlpMetricsReporter.class);
 
   // Environment variable to set the gRPC endpoint.
-  private static final String GRPC_ENDPOINT_CONFIG = "OTEL_EXPORTER_OTLP_ENDPOINT";
+  private static final String GRPC_ENDPOINT_CONFIG = "OTEL_EXPORTER_COL_ENDPOINT";
   private static final int DEFAULT_GRPC_PORT = 4317;
   // Kafka-specific labels.
   private static final String KAFKA_BROKER_ID = "kafka.broker.id";
