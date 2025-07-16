@@ -21,6 +21,7 @@ openTelemetry:
   endpoint: http://prometheus:9090/api/v1/otlp
   protocol: http/protobuf
   interval: 10
+  serviceName: kafka-103
 
 #Whitelist is used to reduce scrapping time
 whitelistObjectNames:
@@ -413,94 +414,10 @@ rules:
       network_processor: $1
       service: kafka-broker-103
       env: cluster-demo
-  #-------------------------------------------------------------------------------------------------------
-  #
-  # Broker / JVM
-  #-------------------------------------------------------------------------------------------------------
-  # JVM GarbageCollector
-  #
-  - pattern: 'java.lang<type=GarbageCollector, name=(.*)><>CollectionCount'
-    name: kafka_jvm_gc_collection_count
-    labels:
-      name: $1
-      service: kafka-broker-103
-      env: cluster-demo
-
-  - pattern: 'java.lang<type=GarbageCollector, name=(.*)><>CollectionTime'
-    name: kafka_jvm_gc_collection_time
-    labels:
-      name: $1
-      service: kafka-broker-103
-      env: cluster-demo
-
-  - pattern: java.lang<type=GarbageCollector,name=(.*)><LastGcInfo, duration>
-    name: kafka_jvm_last_gc_duration
-    labels:
-      name: $1
-      service: kafka-broker-103
-      env: cluster-demo
-    attrNameSnakeCase: true
-
-  - pattern: 'java.lang<type=GarbageCollector, name=([^,]+), key=(.*)><LastGcInfo, memoryUsage(\w+)Gc>(\w+)'
-    name: kafka_jvm_last_gc_memory_usage_$4
-    labels:
-      name: $1
-      space: $2
-      type: $4
-      service: kafka-broker-103
-      env: cluster-demo
-    attrNameSnakeCase: true
-
-  # JVM Memory
-  - pattern: java.lang<type=Memory><HeapMemoryUsage>(\w*)
-    name: kafka_jvm_heap_usage
-    labels:
-      type: $1
-      service: kafka-broker-103
-      env: cluster-demo
-    attrNameSnakeCase: true
-
-  - pattern: java.lang<type=Memory><NonHeapMemoryUsage>(\w*)
-    name: kafka_jvm_non_heap_usage
-    labels:
-      type: $1
-      service: kafka-broker-103
-      env: cluster-demo
-    attrNameSnakeCase: true
-
-  - pattern: 'java.lang<type=MemoryPool, name=(.*)><CollectionUsage>(\w*)'
-    name: kafka_jvm_memory_pool_collection_usage
-    labels:
-      name: $1
-      type: $2
-      service: kafka-broker-103
-      env: cluster-demo
-  - pattern: 'java.lang<type=MemoryPool, name=(.*)><Usage>(\w*)'
-    name: kafka_jvm_memory_pool_usage
-    labels:
-      name: $1
-      type: $2
-      service: kafka-broker-103
-      env: cluster-demo
-  - pattern: 'java.lang<type=MemoryPool, name=(.*)><PeakUsage>(\w*)'
-    name: kafka_jvm_memory_pool_peak_usage
-    labels:
-      name: $1
-      type: $2
-      service: kafka-broker-103
-      env: cluster-demo
-
-  # JVM Thread
-  - pattern: java.lang<type=Threading><>(\w*thread_count)
-    name: kafka_jvm_$1
-    labels:
-      service: kafka-broker-103
-      env: cluster-demo
-    attrNameSnakeCase: true
 
   # Operating System
   - pattern: java.lang<type=OperatingSystem><>(\w*)
     name: kafka_jvm_os_$1
     labels:
-      service: kafka-broker-103
+      service: kafka-broker-101
       env: cluster-demo

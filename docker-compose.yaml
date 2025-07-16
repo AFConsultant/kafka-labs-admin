@@ -135,7 +135,6 @@ services:
     container_name: kafka-101
     ports:
       - "9196:9196"
-      - "9999:9999"
     environment:
       KAFKA_NODE_ID: 101
       KAFKA_PROCESS_ROLES: broker

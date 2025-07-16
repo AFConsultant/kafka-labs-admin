@@ -21,6 +21,7 @@ openTelemetry:
   endpoint: http://prometheus:9090/api/v1/otlp
   protocol: http/protobuf
   interval: 10
+  serviceName: kafka-901
 
 rules:
   - pattern: kafka.controller<type=KafkaController, name=(.+)><>Value
@@ -40,4 +41,11 @@ rules:
     labels:
       aggregate: $2
       service: kafka-broker-901
+      env: cluster-demo
+      
+  # Operating System
+  - pattern: java.lang<type=OperatingSystem><>(\w*)
+    name: kafka_jvm_os_$1
+    labels:
+      service: kafka-broker-101
       env: cluster-demo

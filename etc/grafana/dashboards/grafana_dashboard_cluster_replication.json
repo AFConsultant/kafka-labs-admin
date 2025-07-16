@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 6,
   "links": [],
   "panels": [
     {
@@ -134,7 +134,7 @@
           "expr": "kafka_server_broker_topic_metrics_ReplicationBytesInPerSec_rate{aggregate=\"OneMinute\",env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{job}}",
           "range": true,
           "refId": "A",
           "step": 60
@@ -256,7 +256,7 @@
           "expr": "kafka_server_broker_topic_metrics_ReplicationBytesOutPerSec_rate{aggregate=\"OneMinute\",env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{job}}",
           "range": true,
           "refId": "A",
           "step": 60
@@ -357,7 +357,7 @@
           "expr": "kafka_server_replica_fetcher_manager_MaxLag_value{env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{job}}",
           "range": true,
           "refId": "A"
         }
@@ -456,7 +456,7 @@
           "expr": "kafka_server_fetcher_stats_BytesPerSec{env=\"$env\", aggregate=\"OneMinute\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Host {{instance}}, client_id={{client_id}} / {{broker_host}}:{{broker_port}}",
+          "legendFormat": "Host {{job}}:{{broker_port}}, client_id={{client_id}}",
           "range": true,
           "refId": "A",
           "step": 60
@@ -556,7 +556,7 @@
           "expr": "kafka_server_fetcher_stats_RequestsPerSec{env=\"$env\", aggregate=\"OneMinute\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Host {{instance}}, client_id={{client_id}} / {{broker_host}}:{{broker_port}}",
+          "legendFormat": "Host {{job}}:{{broker_port}}, client_id={{client_id}}",
           "range": true,
           "refId": "A",
           "step": 60

@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 7,
+  "id": 4,
   "links": [],
   "panels": [
     {
@@ -112,7 +112,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(org_apache_kafka_consumer_fetch_manager_records_lag{env=\"$env\", topic=\"$topic\"}) by(topic, group_id, client_instance_id)",
+          "expr": "sum(org_apache_kafka_consumer_fetch_manager_records_lag{topic=\"$topic\"}) by(topic, group_id, client_instance_id)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{group_id}} ({{client_instance_id}})",
@@ -216,7 +216,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "org_apache_kafka_consumer_fetch_manager_fetch_size_avg{env=\"$env\", topic=\"$topic\"}",
+          "expr": "org_apache_kafka_consumer_fetch_manager_fetch_size_avg{topic=\"$topic\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{client_id}} ({{instance}})",
@@ -319,7 +319,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "org_apache_kafka_consumer_fetch_manager_bytes_consumed_rate{env=\"$env\", topic=\"$topic\"}",
+          "expr": "org_apache_kafka_consumer_fetch_manager_bytes_consumed_rate{topic=\"$topic\"}",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -423,7 +423,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "org_apache_kafka_consumer_fetch_manager_records_consumed_rate{env=\"$env\", topic=\"$topic\"}",
+          "expr": "org_apache_kafka_consumer_fetch_manager_records_consumed_rate{topic=\"$topic\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -445,23 +445,6 @@
   ],
   "templating": {
     "list": [
-      {
-        "current": {},
-        "datasource": "Prometheus",
-        "definition": "label_values(org_apache_kafka_consumer_fetch_manager_records_consumed_rate,env)",
-        "includeAll": false,
-        "label": "env",
-        "name": "env",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(org_apache_kafka_consumer_fetch_manager_records_consumed_rate,env)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "type": "query"
-      },
       {
         "current": {},
         "datasource": "Prometheus",
