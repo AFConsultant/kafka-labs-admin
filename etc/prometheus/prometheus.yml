@@ -28,10 +28,6 @@ scrape_configs:
     static_configs:
     - targets: ['otel-collector:8889']
 
-  - job_name: 'kafka-lag-exporter'
-    metrics_path: '/'
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-
+  - job_name: 'kafka-exporter'
     static_configs:
-    - targets: ['kafka-lag-exporter:9090']
+    - targets: ['kafka-exporter:9308']

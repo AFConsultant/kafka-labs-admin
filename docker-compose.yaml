@@ -135,6 +135,7 @@ services:
     container_name: kafka-101
     ports:
       - "9196:9196"
+      - "9999:9999"
     environment:
       KAFKA_NODE_ID: 101
       KAFKA_PROCESS_ROLES: broker
@@ -161,6 +162,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_LOG_DIRS: /opt/kafka/data
+      KAFKA_JMX_PORT: 9999
       OTEL_EXPORTER_COL_ENDPOINT: "otel-collector:4317"
       KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
     volumes:
@@ -445,8 +447,16 @@ services:
     image: otel/opentelemetry-collector-contrib:${OTEL_COLLECTOR_CONTRIB_VERSION}
     volumes:
       - ./etc/otel/collector.yml:/etc/otelcol-contrib/config.yaml
+    depends_on:
+      kafka-101:
+        condition: service_healthy
+
+  kafka-exporter:
+    container_name: kafka-exporter
+    image: danielqsj/kafka-exporter:${KAFKA_EXPORTER_VERSION}
+    command: ["--kafka.server=kafka-101:9092", "--kafka.server=kafka-102:9092", "--kafka.server=kafka-103:9092"]
     ports:
-      - "4317:4317"
+      - 9308:9308
     depends_on:
       kafka-101:
         condition: service_healthy

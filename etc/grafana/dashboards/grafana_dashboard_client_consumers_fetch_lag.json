@@ -112,10 +112,10 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(org_apache_kafka_consumer_fetch_manager_records_lag{topic=\"$topic\"}) by(topic, group_id, client_instance_id)",
+          "expr": "sum(kafka_consumergroup_lag{topic=\"$topic\"}) by(topic, consumergroup)",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{group_id}} ({{client_instance_id}})",
+          "legendFormat": "{{consumergroup}}",
           "range": true,
           "refId": "A"
         }
