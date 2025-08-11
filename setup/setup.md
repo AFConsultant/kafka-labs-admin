@@ -2,9 +2,7 @@
 
 You can run the lab...
 
-* on your local machine
-* on your local machine (using `devcontainers`)
-* on GitHub  (using `devcontainers`)
+* on GitHub  (using `codespaces`)
 
 ## Running on GitHub Codespaces
 
@@ -19,13 +17,12 @@ You can run the lab...
 
 * Run the following scripts to setup the network and your CLI.
 ```sh
-sudo ./init/init_network.sh
-./init/init_cli.sh
-source ~/.bashrc
+ansible-playbook ansible/main.yml
 ```
+* Open a new terminal
 * Test that your Kafka commands are working:
 ```sh
-kafka-topics
+kafka-topics.sh
 ```
 This should show the kafka-topics documentation:
 ```txt
@@ -43,24 +40,3 @@ Option                                   Description
 --bootstrap-server <String: server to    REQUIRED: The Kafka server to connect  
   connect to>                              to.                                  
 ```
-
-## Running on your local machine
-
-### Prerequisites
-
-* Have docker and docker-compose installed.
-* Have at least 8 GB or RAM and 4 CPU.
-
-### Clone the project
-
-```sh
-git clone git@github.com:AFConsultant/kafka-labs-admin.git
-```
-
-### Configuration
-
-Add the [kafka hosts](/init/init_network.sh) to your /etc/hosts.
-Add the [CLI tools](/init/init_cli.sh) to your `.bashrc` or `.zshrc`. 
-If you are on Windows, I advise to run WSL.
-Unix scripts in /init/ are available. Run the init_network.sh with sudo.
-You can also use ansible : `ansible-playbook ansible/init.yml`.

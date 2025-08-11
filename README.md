@@ -16,13 +16,7 @@ First, [setup](./setup/setup.md) your environment.
 ## Labs
 
 1. [Kafka fundamentals](./labs/lab_01_fundamentals.md)
-2. [Kafka producer](./labs/lab_02_producer.md)
-3. [Kafka consumer](./labs/lab_03_consumer.md)
-4. [Schema Registry](./labs/lab_04_schema_registry.md)
-5. [ksqlDB](./labs/lab_05_ksql.md)
-6. [ksqlDB HTTP](./labs/lab_06_ksql_http.md)
-7. [ksqlDB Headless](./labs/lab_07_ksql_headless.md)
-8. [ksqlDB Windowing](./labs/lab_08_ksql_headless.md)
+2. [Kafka durability](./labs/lab_02_durability.md)
 
 ## Author
 
