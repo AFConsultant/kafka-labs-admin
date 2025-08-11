@@ -6,7 +6,7 @@
 
 ```bash
 docker-compose down -v && docker-compose up -d
-````
+```
 
 Wait until all services are healthy.
 
