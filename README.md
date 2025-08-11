@@ -17,6 +17,7 @@ First, [setup](./setup/setup.md) your environment.
 
 1. [Kafka fundamentals](./labs/lab_01_fundamentals.md)
 2. [Kafka durability](./labs/lab_02_durability.md)
+2. [Kafka clients](./labs/lab_03_clients.md)
 
 ## Author
 

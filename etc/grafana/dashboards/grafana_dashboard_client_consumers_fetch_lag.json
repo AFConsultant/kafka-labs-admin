@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 8,
   "links": [],
   "panels": [
     {
@@ -232,7 +232,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "The average number of bytes consumed per second",
+      "description": "The latest lag of each client",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -265,13 +265,12 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
             }
           },
-          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -285,7 +284,7 @@
               }
             ]
           },
-          "unit": "Bps"
+          "unit": "short"
         },
         "overrides": []
       },
@@ -295,7 +294,7 @@
         "x": 0,
         "y": 6
       },
-      "id": 3,
+      "id": 11,
       "options": {
         "legend": {
           "calcs": [
@@ -307,7 +306,7 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -319,16 +318,15 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "org_apache_kafka_consumer_fetch_manager_bytes_consumed_rate{topic=\"$topic\"}",
+          "expr": "sum(rate(kafka_consumergroup_lag{topic=\"$topic\"}[2m])) by(topic, consumergroup)",
           "format": "time_series",
-          "hide": false,
-          "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "{{client_id}} ({{instance}})",
+          "legendFormat": "{{consumergroup}}",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Consumed Bytes Rate Per Second",
+      "title": "Consumer Lag Rate of Change",
       "type": "timeseries"
     },
     {
@@ -433,6 +431,110 @@
         }
       ],
       "title": "Consumed Records Rate Per Second",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "The average number of bytes consumed per second",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "org_apache_kafka_consumer_fetch_manager_bytes_consumed_rate{topic=\"$topic\"}",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{client_id}} ({{instance}})",
+          "refId": "A"
+        }
+      ],
+      "title": "Consumed Bytes Rate Per Second",
       "type": "timeseries"
     }
   ],
