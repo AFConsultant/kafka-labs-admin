@@ -109,13 +109,13 @@ Keep watching Grafana:
 
 ## Step 5 - Restart the Producer
 
-1. Restart the producer:
+Restart the producer:
 
 ```bash
 docker start producer-perf-test
 ```
 
-2. Observe in Grafana:
+Observe in Grafana:
 
 - Fetch Consumer Request Latency should drop back to **low values**.
 - Consumers Requests are now returned immediately.
