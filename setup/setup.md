@@ -16,15 +16,20 @@ You can run the lab...
 ### Configuration
 
 * Run the following scripts to setup the network and your CLI.
+
 ```sh
 ansible-playbook ansible/main.yml
 ```
+
 * Open a new terminal
 * Test that your Kafka commands are working:
+
 ```sh
 kafka-topics.sh
 ```
+
 This should show the kafka-topics documentation:
+
 ```txt
 ➜ /workspaces/kafka-labs-admin (main) $ kafka-topics
 Create, delete, describe, or change a topic.
