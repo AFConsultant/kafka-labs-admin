@@ -74,9 +74,9 @@ Kafka processes different request types:
 ## Step 3 - Observing Consumer Fetch Latency in Grafana
 
 **Initial setup:**
-Your cluster already has `producer-perf-test` running, producing data to the `perf-test` topic. 
+Your cluster already has `producer-perf-test` running, producing data to the `perf-test` topic.
 
-Open **Grafana** → Dashboard **Kafka Broker / Performance & Latency**/
+Open **Grafana** → Dashboard **Kafka Broker / Performance & Latency**.
 
 Select the `FetchConsumer` requests in the filter.
 

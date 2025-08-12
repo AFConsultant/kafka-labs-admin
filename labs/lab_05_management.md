@@ -2,7 +2,7 @@
 
 This lab explores how to manage and configure a Kafka cluster. You will learn how to inspect broker configurations, rebalance data across brokers for optimal performance, and simulate and recover from a complete broker failure.
 
-## Exploring Broker Configuration
+## Exploring the broker configuration
 
 In production, you will often need to fine-tune your cluster's behavior. Kafka provides hundreds of configuration properties. Let's get familiar with where to find them.
 
@@ -106,68 +106,112 @@ kafka-configs.sh \
 
 -----
 
-## Rebalancing the Cluster
+## Rebalancing the cluster
 
 A common administrative task is rebalancing data. This is often necessary when adding new brokers to a cluster or when data distribution becomes skewed, leading to "hotspots" on certain brokers.
 
-### 1\. Create an Imbalanced Topic
+### Create an imbalanced topic
 
 First, let's intentionally create a topic with all its data on only two of our three brokers to simulate an imbalance.
 
-Create a new topic named `moving-parts` with 6 partitions and 2 replicas, but place them only on brokers 1 and 2. 
+Create a new topic named `moving-parts` with 6 partitions and 2 replicas, but place them only on brokers 1 and 2.
 
 ```shell
-# Command from the PDF adapted for the sample lab's environment
 kafka-topics.sh \
-  --bootstrap-server kafka-101:9196,kafka-102:9196 \
+  --bootstrap-server kafka-101:9196,kafka-102:9296,kafka-103:9396 \
   --create \
   --topic moving-parts \
   --replica-assignment 101:102,102:101,101:102,102:101,101:102,102:101
 ```
 
-Next, produce a significant amount of data (about 2GB) to this topic. 
+Note that the assignment only created replicas on brokers 101 and 102, and not 103.
+Next, we will produce a significant amount of data (about 2GB) to this topic.
 
 ```shell
-# Command from the PDF adapted for the sample lab's environment
 kafka-producer-perf-test.sh \
   --topic moving-parts \
   --num-records 2000000 \
   --record-size 1000 \
   --throughput -1 \
-  --producer-props bootstrap.servers=kafka-101:9196,kafka-102:9196
+  --producer-props bootstrap.servers=kafka-101:9196,kafka-102:9296,kafka-103:9396
 ```
 
-### 2\. Observe the Imbalance
+### Observe the imbalance
 
-Go to the Control Center and navigate to the **Brokers** overview page. You should see a metric for **Disk** usage. After a few minutes, a red bar may appear, indicating a significant imbalance in data distribution across the brokers.  You can also inspect the `moving-parts` topic to confirm all its partitions reside on brokers 1 and 2. 
+Open **Grafana** → Dashboard **Kafka / Hard Disk Usage**.
+Find the **Logs Size Per Broker (including replicas)** panel. Observe the difference in disk usage for each brokers.
+We will rebalance the replicas in your cluster for the topic `moving-parts`.
 
-### 3\. Execute and Monitor the Rebalance
+### Rebalance the partitions
 
-To fix this, we will use the `confluent-rebalancer` tool. This tool calculates a plan to move partition replicas around the cluster to achieve a more even load.
+We will use the `kafka-reassign-partitions` CLI to rebalance the partitions.
+First, we will create a reassignment plan. Create a json file named `reassingment-plan.json`.
 
-Execute the rebalance. We will add a `--throttle` flag to limit the rebalancing network traffic to 1MB/s so it doesn't impact other cluster operations. 
+```json
+{
+  "version": 1,
+  "topics": [
+    { "topic": "moving-parts" }
+  ]
+}
+```
+
+Let's create a partition reassignment plan from this plan.
+Execute the following command:
 
 ```shell
-# This command is from the Confluent Platform, your environment might need a different tool
-confluent-rebalancer execute \
-  --bootstrap-server localhost:9092 \
-  --throttle 1000000
+kafka-reassign-partitions.sh \
+  --bootstrap-server kafka-101:9196 \
+  --topics-to-move-json-file reassignment-plan.json \
+  --broker-list 101,102,103 \
+  --generate
 ```
 
-The tool will present a plan and ask for confirmation. Type `y` to proceed. 
+The proposed partition reassignment plan rebalances partitions accross the cluster.
+Save this plan to a json file `reassignment.json`.
 
-Once started, the rebalancer sets dynamic configuration on the brokers to limit replication traffic. You can monitor the progress:
+Execute the rebalance based on this plan. We will use a throttle of 5 MB / s.  
 
 ```shell
-# Check the status of the ongoing rebalance
-confluent-rebalancer status --bootstrap-server localhost:9092
-
-# [cite_start]You'll see which partitions are currently being moved 
-Partitions being rebalanced:
- Topic moving-parts: 0,1,2,4
+kafka-reassign-partitions.sh \
+  --bootstrap-server kafka-101:9196 \
+  --reassignment-json-file reassignment.json \
+  --execute \
+  --throttle 5000000
 ```
 
-The rebalance will eventually complete.  Check the **Brokers** page in Control Center again; the disk usage should now be balanced.  If you inspect the `moving-parts` topic, you will see its partitions are now distributed across all three brokers. 
+You should see a message indicated the partition reassignment started:
+
+```text
+Successfully started partition reassignments for moving-parts-0,moving-parts-1,moving-parts-2,moving-parts-3,moving-parts-4,moving-parts-5
+```
+
+The reassignment should take around 7 minutes (approximately 2 GB of data moved at 5 MB / s) at most.
+Check the new partition assignment of the topic `moving-parts` in AKHQ.
+See the disk usage increase in Grafana.
+
+Regularly check the status of the `kafka-reassign-partitions` CLI tool:
+
+```shell
+kafka-reassign-partitions.sh \
+  --bootstrap-server kafka-101:9196 \
+  --reassignment-json-file reassignment.json \
+  --verify
+```
+
+When it's completed, you should see :
+
+```text
+Status of partition reassignment:
+Reassignment of partition moving-parts-0 is completed.
+Reassignment of partition moving-parts-1 is completed.
+Reassignment of partition moving-parts-2 is completed.
+Reassignment of partition moving-parts-3 is completed.
+Reassignment of partition moving-parts-4 is completed.
+Reassignment of partition moving-parts-5 is completed.
+```
+
+The disk usage in Grafana should now show a better balance. Compare the situation before and after the rebalance.
 
 -----
 
@@ -175,35 +219,37 @@ The rebalance will eventually complete.  Check the **Brokers** page in Control C
 
 Kafka is designed for high availability. Let's simulate a permanent broker failure to see how the cluster recovers.
 
-### 1\. Fail a Broker
+### Fail a Broker
 
-We will completely stop broker 1 and wipe its data volume, simulating a catastrophic hardware failure. 
-
-```shell
-# The following commands use the docker-compose setup from the PDF
-docker-compose stop kafka-1
-docker-compose rm kafka-1
-docker volume rm confluent-admin_data-kafka-1
-```
-
-In Control Center, you will see the broker count drop to 2, and more importantly, you'll see "Under replicated partitions."  This is because the replicas that lived on broker 1 are now gone. The cluster is in an unhealthy state.
-
-### 2\. Replace and Recover the Broker
-
-Now, let's "replace" the failed broker by starting a new, empty one with the same ID. 
+We will completely stop broker 101 and wipe its data volume, simulating a catastrophic hardware failure.
 
 ```shell
-docker-compose up -d kafka-1
+docker-compose stop volume-init
+docker-compose rm volume-init
+docker-compose stop kafka-101
+docker-compose rm kafka-101
+docker volume rm kafka-labs-admin_data-broker-101
 ```
 
-The new broker will start up with no data.  Because the topic `moving-parts` had a replication factor of 2, the surviving brokers (2 and 3) still have a complete copy of the data. The cluster controller will instruct the new broker 1 to copy the missing data from the other brokers.
+Open **Grafana** → Dashboard **Kafka Cluster / Global HealthCheck**.
 
-After a few minutes, you can check the logs on the new broker 1. You will see that the topic data has been replicated to it, automatically healing the cluster.  The number of "Under replicated partitions" will return to zero, and the cluster will be fully operational and healthy again. 
+You should see after a while two broker running and some under-replicated partitions.
+We will now recover the broker by simply restarting it.
 
-### Cleanup
+### Replace and Recover the Broker
 
-To clean up your environment and remove all containers and volumes, run: 
+Now, let's "replace" the failed broker by starting a new, empty one with the same ID.
 
 ```shell
-docker-compose down -v
+docker-compose up -d kafka-101
 ```
+
+The new broker will start up with no data. It will first become a follower on each replica it was assigned.
+
+After a few minutes, you can check the logs on the new broker 101, for the `perf-test` topic.
+
+```shell
+docker exec kafka-101 ls /opt/kafka/data | grep perf-test
+```
+
+You will see that the topic data has been replicated to it, automatically healing the cluster.  The number of "Under replicated partitions" will return to zero, and the cluster will be fully operational and healthy again.
