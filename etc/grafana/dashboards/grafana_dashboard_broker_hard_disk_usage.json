@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 7,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -399,7 +399,7 @@
           "expr": "10 * 0.6",
           "hide": false,
           "instant": false,
-          "legendFormat": "Limit",
+          "legendFormat": "Alert (60 %)",
           "range": true,
           "refId": "B"
         },
@@ -413,7 +413,7 @@
           "expr": "10 * 1",
           "hide": false,
           "instant": false,
-          "legendFormat": "Total",
+          "legendFormat": "Available",
           "range": true,
           "refId": "C"
         }
@@ -459,5 +459,5 @@
   "timezone": "",
   "title": "Kafka / Hard Disk Usage",
   "uid": "zApgMBbik",
-  "version": 2
+  "version": 1
 }

@@ -26,16 +26,8 @@ These are usually back of the enveloppe calculation and managing a cluster is al
 Open **Grafana** → Dashboard **Kafka / Hard Disk Usage**.
 Confluent recommend Alerting at 60% capacity.
 
-Send 4 GB of data to the cluster.
-
-```shell
-kafka-producer-perf-test.sh \
-  --topic perf-test \
-  --num-records 4000000 \
-  --record-size 1000 \
-  --throughput -1 \
-  --producer-props bootstrap.servers=kafka-101:9196,kafka-102:9296,kafka-103:9396
-```
+Query :
+sum(kafka_log_Size) by (service) / (1024^3)
 
 ## Alerts
 
