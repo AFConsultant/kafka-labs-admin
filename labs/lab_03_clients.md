@@ -138,14 +138,6 @@ kafka-console-consumer.sh \
   --group consumer-perf-test
 ```
 
-Does lag decrease as more consumers share the partitions?
 How many more consumers can we add to this group to improve throughput?
-
-### Optional Challenge
-
-* Change the producer rate (e.g., run your own `kafka-producer-perf-test.sh` with higher `--throughput`) and observe lag impact.
-* Add partitions to `perf-test` and see if adding more consumers helps further.
-* Create a second consumer group for `perf-test` and compare its lag vs the original group.
-* Think about alerts: which Grafana/Prometheus signals would you alert on for `consumer falling behind` vs `producer overloaded`?
 
 > 🧯 Safety Note: Never reset offsets in production without a rollback plan and stakeholder approval.
