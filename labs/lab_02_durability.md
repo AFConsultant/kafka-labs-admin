@@ -185,15 +185,10 @@ kafka-topics.sh \
   --topic replicated-topic
 ```
 
-We use the full boostrap server here, because otherwise we might have shutdown the 101 broker.
-Notice that partitions previously led by `$OFFLINE_BROKER` now have new leaders (such as partition 0).
+Note that We use the full boostrap server here, instead of just kafka-101, because it might be shutdown and we still want to access the cluster.
+Also note that partitions previously led by `$OFFLINE_BROKER` now have new leaders (such as partition 0).
 
-Connect to the new broker leader of partition 0. It's `leader-epoch-checkpoint` has been updated (don't forget to replace the broker name in the following command). What is the offset where this broker gained leadership ?
-
-```shell
-docker exec -it kafka-102 bash
-cat /opt/kafka/data/replicated-topic-0/leader-epoch-checkpoint
-```
+Let's inspect our cluster health by checking Grafana.
 
 Use the port tab to connect to Grafana (port 3000). If the port doesn't exist, add it manually.
 Log in using `admin` / `kafka`.
