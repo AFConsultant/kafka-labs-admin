@@ -84,7 +84,7 @@ Find the **Request Total Time Ms** panel. Observe the different latencies.
 
 Note the other existing panels, and how they match the Request lifecycle.
 
-> In a **normal load scenario**, the 95th percentile latency should be **low** (a few milliseconds), because fetch requests return quickly when new messages are available.
+> In a **normal load scenario**, the 75th percentile latency should be **low** (a few milliseconds), because fetch requests return quickly when new messages are available.
 
 ---
 
@@ -100,7 +100,7 @@ docker stop producer-perf-test
 
 Keep watching Grafana:
 
-- After a few minutes, **Fetch Consumer Request Latency (p95)** should **increase**.
+- After a few minutes, **Fetch Consumer Request Latency (p75)** should **increase**.
 - Expect values close to **500ms** - the default `fetch.max.wait.ms` - because consumers now wait before timing out empty fetches.
 - When there are no new messages, consumers wait up to `fetch.max.wait.ms` before returning an empty response.
 - This increases the observed fetch latency even though the system is not overloaded.
