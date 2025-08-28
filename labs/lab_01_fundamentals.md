@@ -9,11 +9,21 @@ A Kafka environment consists of:
 - One or more brokers grouped into a cluster. In this case, there is multiple brokers, metadata brokers (kafka-901, 902 and 903) and service brokers (kafka-101, 102 and 103).
 - [AKHQ](https://akhq.io/). This app allows you to see what's inside your cluster (port: 8085).
 - The Schema Registry, which contains your environment schemas.
-- Services that automatically creates topics, users, ACL, and trigger the metric collection.
-- Prometeus and Grafana to handle the metrics.
+- Services that automatically creates topics, users, ACL, and trigger the metrics collection.
+- Prometheus and Grafana to handle the metrics.
 - Two test clients, producer-perf-test, and consumer-perf-test, to generate load.
 - A opentelemetry collector to collect metrics from the broker.
 - A kafka exporter that exposes lag.
+
+## Setting up your environment
+
+Run the following ansible script to setup your environment :
+
+```sh
+ansible-playbook ansible/main.yml
+```
+
+Once it's done, open a new terminal.
 
 ## Creating your first topic
 
@@ -55,7 +65,7 @@ Topics can be auto-created by default by producer and consumers. This is a bad p
 
 ### It's your turn now
 
-Create a topic 'hello-world', with 5 partitions and a replication-factor of 1.
+Create a topic 'hello-world', with 5 partitions and a replication-factor of 3.
 
 ## Let's produce and consume
 
@@ -65,6 +75,8 @@ Other Kafka CLI are interesting.
 
 We will push the first five bike trips to the topic we previously created, `first_topic`.
 
+Make sure you created the `hello-world` topic before continuing.
+
 First, run the `kafka-console-producer` without any arguments to show the documentation.
 
 Try to come up with the command by yourself.
@@ -72,7 +84,7 @@ Try to come up with the command by yourself.
 ```shell
 kafka-console-producer.sh \
   --bootstrap-server kafka-101:9196 \
-  --topic first_topic
+  --topic hello-world
 ```
 
 Now, type your messages, press enter: your message is sent to Kafka. Press `CTRL-D` to exit.
@@ -92,7 +104,7 @@ Try to find the command by yourself, reading the documentation. One additionnal 
 ```shell
 kafka-console-consumer.sh \
   --bootstrap-server kafka-101:9196 \
-  --topic first_topic \
+  --topic hello-world \
   --from-beginning
 ```
 
