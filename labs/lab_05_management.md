@@ -14,7 +14,8 @@ In production, you will often need to fine-tune your cluster's behavior. Kafka p
 You'll notice that some settings are `DEFAULT_CONFIG` and other `STATIC_BROKER_CONFIG`.
 `STATIC_BROKER_CONFIG` comes from the `server.properties` file. This file is generated from our docker-compose environment variables.
 
-Dynamically Changing Configuration
+**Dynamically Changing Configuration**
+
 One of Kafka's most powerful features is the ability to change most configurations on-the-fly without restarting brokers. Let's test this by changing the data retention period for a new topic.
 
 1. Create a Test Topic and Check its Configuration
@@ -47,7 +48,7 @@ kafka-configs.sh \
   --bootstrap-server kafka-101:9196 \
   --alter \
   --topic retention-test \
-  --add-config log.retention.ms=10000,segment.ms=5000
+  --add-config "retention.ms=10000,segment.ms=5000"
 ```
 
 Check that the configuration has been applied properly.
@@ -72,15 +73,9 @@ kafka-console-producer.sh \
 # Press CTRL+D to exit
 ```
 
-Wait for 15 seconds for the retention period to pass and for Kafka's log cleaner to run.
+Wait for a few minutes for the cleaner thread to run. It can take up to five minutes.
 
-```shell
-echo "Waiting for 15 seconds..."
-sleep 15
-echo "Done waiting."
-```
-
-Try to consume the message:
+Ten try to consume the message:
 
 ```shell
 kafka-console-consumer.sh \
@@ -145,7 +140,7 @@ We will rebalance the replicas in your cluster for the topic `moving-parts`.
 ### Rebalance the partitions
 
 We will use the `kafka-reassign-partitions` CLI to rebalance the partitions.
-First, we will create a reassignment plan. Create a json file named `reassingment-plan.json`.
+First, we will create a reassignment plan. Create a json file named `reassignment-plan.json`.
 
 ```json
 {

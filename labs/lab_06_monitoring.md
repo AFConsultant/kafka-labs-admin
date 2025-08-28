@@ -1,4 +1,4 @@
-# Lab 05 - Kafka Monitoring
+# Lab 06 - Kafka Monitoring
 
 ## Metric monitoring
 
