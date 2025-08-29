@@ -9,12 +9,5 @@
       "installGradle": "false"
     }
   },
-  "postCreateCommand": "sudo apt update && sudo apt install -y kafkacat ansible",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-ossdata.vscode-pgsql"
-      ]
-    }
-  }
+  "postCreateCommand": "sudo apt update && sudo apt install -y ansible"
 }

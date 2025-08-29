@@ -20,7 +20,9 @@ First, [setup](./setup/setup.md) your environment.
 3. [Kafka clients](./labs/lab_03_clients.md)
 4. [Kafka internals](./labs/lab_04_internals.md)
 5. [Kafka management](./labs/lab_05_management.md)
-5. [Kafka monitoring](./labs/lab_06_monitoring.md)
+6. [Kafka monitoring](./labs/lab_06_monitoring.md)
+7. [Kafka operations](./labs/lab_07_operations.md)
+8. [Kafka security](./labs/lab_08_security.md)
 
 ## Author
 

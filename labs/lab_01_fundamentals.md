@@ -73,8 +73,6 @@ Other Kafka CLI are interesting.
 
 `kafka-console-producer` is the tool used to push messages into Kafka.
 
-We will push the first five bike trips to the topic we previously created, `first_topic`.
-
 Make sure you created the `hello-world` topic before continuing.
 
 First, run the `kafka-console-producer` without any arguments to show the documentation.

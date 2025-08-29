@@ -165,6 +165,7 @@ services:
       KAFKA_JMX_PORT: 9999
       OTEL_EXPORTER_COL_ENDPOINT: "otel-collector:4317"
       KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
+      KAFKA_NUM_IO_THREADS: "${KAFKA_NUM_IO_THREADS}"
     volumes:
       - data-broker-101:/opt/kafka/data
       - ./security/data/kafka-101-creds:/opt/kafka/security:ro
@@ -221,6 +222,7 @@ services:
       KAFKA_LOG_DIRS: /opt/kafka/data
       OTEL_EXPORTER_COL_ENDPOINT: "otel-collector:4317"
       KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
+      KAFKA_NUM_IO_THREADS: "${KAFKA_NUM_IO_THREADS}"
     volumes:
       - data-broker-102:/opt/kafka/data
       - ./security/data/kafka-102-creds:/opt/kafka/security:ro
@@ -245,7 +247,7 @@ services:
         condition: service_started
 
   kafka-103:
-    image: apache/kafka:${KAFKA_102_VERSION}
+    image: apache/kafka:${KAFKA_103_VERSION}
     container_name: kafka-103
     ports:
       - "9396:9396"
@@ -277,6 +279,7 @@ services:
       KAFKA_LOG_DIRS: /opt/kafka/data
       OTEL_EXPORTER_COL_ENDPOINT: "otel-collector:4317"
       KAFKA_METRIC_REPORTERS: com.afconsultant.kafkaadminlabs.ClientOtlpMetricsReporter
+      KAFKA_NUM_IO_THREADS: "${KAFKA_NUM_IO_THREADS}"
     volumes:
       - data-broker-103:/opt/kafka/data
       - ./security/data/kafka-103-creds:/opt/kafka/security:ro
@@ -346,8 +349,6 @@ services:
     container_name: create-topics
     command: >
       bash -c 'echo Creating topics... ;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic bike_trips --partitions 3 --replication-factor 3 ;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic station_infos_raw_csv --partitions 3 --replication-factor 3 --config cleanup.policy=compact ;
       /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-101:9092,kafka-102:9092,kafka-103:9092 --create --topic perf-test --partitions 6 --replication-factor 3 ;
       true'
     depends_on:
@@ -460,6 +461,17 @@ services:
     depends_on:
       kafka-101:
         condition: service_healthy
+
+  netem-103:
+    image: nicolaka/netshoot
+    container_name: netem-103
+    network_mode: "service:kafka-103"
+    cap_add:
+      - NET_ADMIN                    
+    command: ["sleep", "infinity"]
+    depends_on:
+      - kafka-103
+    restart: unless-stopped
 
 volumes:
   data-controller-901:
