@@ -1,0 +1,5 @@
+rules:
+  - pattern: 'kafka\.producer<type=producer-metrics, client-id=(.+)><>(.+):\w*'
+    name: kafka_producer_$2
+    labels: { client_id: "$1", monlabel: mavaluelabel }
+    type: GAUGE

@@ -1,0 +1,77 @@
+{
+    "version": 1,
+    "partitions": [
+        {
+            "topic": "moving-parts",
+            "partition": 0,
+            "replicas": [
+                102,
+                101
+            ],
+            "log_dirs": [
+                "any",
+                "any"
+            ]
+        },
+        {
+            "topic": "moving-parts",
+            "partition": 1,
+            "replicas": [
+                103,
+                102
+            ],
+            "log_dirs": [
+                "any",
+                "any"
+            ]
+        },
+        {
+            "topic": "moving-parts",
+            "partition": 2,
+            "replicas": [
+                101,
+                103
+            ],
+            "log_dirs": [
+                "any",
+                "any"
+            ]
+        },
+        {
+            "topic": "moving-parts",
+            "partition": 3,
+            "replicas": [
+                102,
+                103
+            ],
+            "log_dirs": [
+                "any",
+                "any"
+            ]
+        },
+        {
+            "topic": "moving-parts",
+            "partition": 4,
+            "replicas": [
+                103,
+                101
+            ],
+            "log_dirs": [
+                "any",
+                "any"
+            ]
+        },
+        {
+            "topic": "moving-parts",
+            "partition": 5,
+            "replicas": [
+                101,
+                102
+            ],
+            "log_dirs": [
+                "any",
+                "any"
+            ]
+        }
+    ]
+}
